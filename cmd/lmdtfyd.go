@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lmdtfy/lmdtfy/pkg/database"
 	"github.com/lmdtfy/lmdtfy/pkg/handler"
 	"github.com/lmdtfy/lmdtfy/pkg/store"
 )
@@ -26,14 +25,9 @@ func main() {
 	flag.StringVar(&dbName, "db", "dev_lmdtfy", "")
 	flag.Parse()
 
-	if err := database.Connect(address, dbName); err != nil {
-		log.Fatal("Error connecting to database: ", err)
-	}
 	if err := store.Connect(address, dbName); err != nil {
 		log.Fatal("Error connecting to database: ", err)
 	}
-
-	database.SetupDB(insertTestData)
 
 	r := gin.Default()
 
@@ -41,7 +35,8 @@ func main() {
 
 	m := r.Group("/api")
 	//m.POST("/session", handler.Login)
-	m.GET("/repo", handler.CreateRepo)
+	//m.GET("/repo", handler.CreateRepo)
+	m.GET("/repo", handler.GetAllRepos)
 	m.GET("/auth/login/github", handler.LinkGithub)
 	r.Run(":4000")
 }
